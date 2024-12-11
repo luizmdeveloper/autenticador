@@ -17,7 +17,7 @@ public class CartoesController implements CartoesSwagger {
     }
 
     @Override
-    public BigDecimal obterSaldo(String numero) {
+    public BigDecimal obterSaldo(String numeroCartao) {
         return null;
     }
 }
