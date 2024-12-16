@@ -16,12 +16,11 @@ public class TransacoesController implements TransacoesSwagger {
         this.criacaoTransacaoUseCase = criacaoTransacaoUseCase;
     }
 
-
     @Override
     public TransacaoResponse criar(TransacaoRequest request) {
         var transacao = criacaoTransacaoUseCase.criar(request);
         var response = new TransacaoResponse();
-        response.setStatus("");
+        response.setStatus("OK");
         return response;
     }
 

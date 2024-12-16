@@ -1,5 +1,6 @@
 package br.com.vr.autenticador.api.request;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,5 +20,6 @@ public class TransacaoRequest implements Serializable {
     private String senha;
 
     @NotNull
+    @DecimalMin(value = "0.01")
     private BigDecimal valor;
 }

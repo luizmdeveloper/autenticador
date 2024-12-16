@@ -2,6 +2,7 @@ package br.com.vr.autenticador.api.controller.cartoes;
 
 import br.com.vr.autenticador.api.request.CartaoRequest;
 import br.com.vr.autenticador.api.response.CartaoResponse;
+import br.com.vr.autenticador.application.core.presetation.CartaoPresentation;
 import br.com.vr.autenticador.application.core.usecase.ConsultaSaldoCartaoUseCase;
 import br.com.vr.autenticador.application.core.usecase.CriacaoCartaoUseCase;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,19 +16,17 @@ public class CartoesController implements CartoesSwagger {
 
     private final CriacaoCartaoUseCase criacaoCartaoUseCase;
     private final ConsultaSaldoCartaoUseCase consultaSaldoCartaoUseCase;
+    private final CartaoPresentation presentation;
 
-    public CartoesController(CriacaoCartaoUseCase criacaoCartaoUseCase, ConsultaSaldoCartaoUseCase consultaSaldoCartaoUseCase) {
+    public CartoesController(CriacaoCartaoUseCase criacaoCartaoUseCase, ConsultaSaldoCartaoUseCase consultaSaldoCartaoUseCase, CartaoPresentation presentation) {
         this.criacaoCartaoUseCase = criacaoCartaoUseCase;
         this.consultaSaldoCartaoUseCase = consultaSaldoCartaoUseCase;
+        this.presentation = presentation;
     }
 
     @Override
     public CartaoResponse criar(CartaoRequest request) {
-        var cartao = criacaoCartaoUseCase.save(request);
-        var response = new CartaoResponse();
-        response.setNumeroCartao(cartao.getNumero());
-        response.setSenha(cartao.getSenha());
-        return response;
+        return presentation.convertEntityToResponse(criacaoCartaoUseCase.save(request));
     }
 
     @Override

@@ -2,6 +2,7 @@ package br.com.vr.autenticador.application.core.usecase;
 
 import br.com.vr.autenticador.api.request.CartaoRequest;
 import br.com.vr.autenticador.application.core.entidade.Cartao;
+import br.com.vr.autenticador.application.core.presetation.CartaoPresentation;
 import br.com.vr.autenticador.application.core.repository.CartaoRepository;
 import br.com.vr.autenticador.application.execption.NumeroCartaoJaCadastradoException;
 
@@ -10,9 +11,11 @@ import java.math.BigDecimal;
 public class CriacaoCartaoUseCase {
 
     private final CartaoRepository repository;
+    private final CartaoPresentation presentation;
 
-    public CriacaoCartaoUseCase(CartaoRepository repository) {
+    public CriacaoCartaoUseCase(CartaoRepository repository, CartaoPresentation presentation) {
         this.repository = repository;
+        this.presentation = presentation;
     }
 
     public Cartao save(CartaoRequest cartaoRequest) {
@@ -22,10 +25,8 @@ public class CriacaoCartaoUseCase {
             throw new NumeroCartaoJaCadastradoException("Existe um cartão com mesmo número");
         }
 
-        var cartao = new Cartao();
-        cartao.setNumero(cartaoRequest.getNumeroCartao());
-        cartao.setSenha(cartaoRequest.getSenha());
-        cartao.setSaldo(new BigDecimal(500d));
+        var cartao = presentation.convertRequestToEntity(cartaoRequest);
+        cartao.setSaldo(BigDecimal.valueOf(500));
         repository.save(cartao);
 
         return cartao;

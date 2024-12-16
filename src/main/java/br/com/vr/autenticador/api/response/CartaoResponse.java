@@ -11,5 +11,4 @@ public class CartaoResponse implements Serializable {
 
     private String numeroCartao;
     private String senha;
-
 }

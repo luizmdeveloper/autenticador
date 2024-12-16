@@ -16,7 +16,7 @@ public class ConsultaSaldoCartaoUseCase {
     public BigDecimal consultar(String numeroCartao) {
         var optionalCartao = repository.findByNumero(numeroCartao);
 
-        if (optionalCartao.isPresent()) {
+        if (optionalCartao.isEmpty()) {
             throw new EntidadeNaoEncontradoException("Cartão não foi encontrado");
         }
 
