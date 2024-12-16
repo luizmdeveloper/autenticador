@@ -6,16 +6,21 @@ import br.com.vr.autenticador.application.core.presetation.impl.CartaoPresentati
 import br.com.vr.autenticador.application.core.presetation.impl.TransacaoPresentationImpl;
 import br.com.vr.autenticador.application.core.repository.CartaoRepository;
 import br.com.vr.autenticador.application.core.repository.TransacaoRepository;
+import br.com.vr.autenticador.application.core.repository.UsuarioRepository;
 import br.com.vr.autenticador.application.core.repository.impl.CartaoRepositoryImpl;
 import br.com.vr.autenticador.application.core.repository.impl.TransacaoRepositoryImpl;
+import br.com.vr.autenticador.application.core.repository.impl.UsarioRepositoryImpl;
 import br.com.vr.autenticador.application.core.usecase.ConsultaSaldoCartaoUseCase;
 import br.com.vr.autenticador.application.core.usecase.CriacaoCartaoUseCase;
 import br.com.vr.autenticador.application.core.usecase.CriacaoTransacaoUseCase;
 import br.com.vr.autenticador.application.infrastructure.repository.JpaCartaoRepository;
 import br.com.vr.autenticador.application.infrastructure.repository.JpaTransacaoRepository;
+import br.com.vr.autenticador.application.infrastructure.repository.JpaUsuarioRepository;
+import br.com.vr.autenticador.application.infrastructure.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -27,6 +32,9 @@ public class AutenticadorResolveDependency {
 
     @Autowired
     private JpaTransacaoRepository jpaTransacaoRepository;
+
+    @Autowired
+    private JpaUsuarioRepository jpaUsuarioRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,6 +62,11 @@ public class AutenticadorResolveDependency {
     }
 
     @Bean
+    public UsuarioRepository usuarioRepository() {
+        return new UsarioRepositoryImpl(jpaUsuarioRepository);
+    }
+
+    @Bean
     public CriacaoCartaoUseCase criacaoCartaoUseCase() {
         return new CriacaoCartaoUseCase(cartaoRepository(), cartaoPresentation());
     }
@@ -66,5 +79,10 @@ public class AutenticadorResolveDependency {
     @Bean
     public ConsultaSaldoCartaoUseCase consultaSaldoCartaoUseCase() {
         return new ConsultaSaldoCartaoUseCase(cartaoRepository());
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl(usuarioRepository());
     }
 }

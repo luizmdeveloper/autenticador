@@ -7,6 +7,7 @@ public enum TipoProblema {
 
     ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada", "Entidade não encontrada"),
     ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio"),
+    ERRO_NAO_AUTORIZADO("/erro-nao-autorizado", "Usuário não autorizado"),
     DADOS_INVALIDOS("/erro-dados-invalidos", "Dados inválido");
 
     private String titulo;
@@ -15,5 +16,13 @@ public enum TipoProblema {
     private TipoProblema(String path, String titulo) {
         this.path = "https://vr.com.br" + path;
         this.titulo = titulo;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

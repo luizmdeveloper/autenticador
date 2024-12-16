@@ -15,4 +15,5 @@ public class CartaoRequest implements Serializable {
 
     @NotBlank
     private String senha;
+
 }

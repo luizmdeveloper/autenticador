@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -77,6 +78,14 @@ public class MiniAutorizadorGlobalExceptionHandler extends ResponseEntityExcepti
     public ResponseEntity<Object> handleErroGenericoException(ErroGenericoException ex, WebRequest request){
         HttpStatusCode status = HttpStatusCode.valueOf(422);
         var problema = criarProblema(TipoProblema.ERRO_NEGOCIO, status, ex.getMessage());
+        problema.setMensagemUsuario(ex.getMessage());
+        return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request){
+        HttpStatusCode status = HttpStatusCode.valueOf(401);
+        var problema = criarProblema(TipoProblema.ERRO_NAO_AUTORIZADO, status, ex.getMessage());
         problema.setMensagemUsuario(ex.getMessage());
         return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
     }

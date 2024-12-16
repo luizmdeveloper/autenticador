@@ -31,5 +31,4 @@ public class CriacaoCartaoUseCase {
 
         return cartao;
     }
-
 }

@@ -10,4 +10,5 @@ import java.io.Serializable;
 public class TransacaoResponse implements Serializable {
 
     private String status;
+
 }

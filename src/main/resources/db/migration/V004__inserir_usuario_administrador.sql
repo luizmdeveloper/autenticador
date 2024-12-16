@@ -1,0 +1,1 @@
+INSERT INTO usuarios (email, senha) VALUES ('luiz.cavalcante@vr.com.br', '$2a$10$V9VUwUO97XEMnu.2bgNZm.17VPgb10Q7kp0W/36gHbVqjnn7TuIpm');
