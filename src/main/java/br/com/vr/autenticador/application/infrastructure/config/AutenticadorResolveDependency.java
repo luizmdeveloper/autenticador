@@ -16,6 +16,8 @@ import br.com.vr.autenticador.application.infrastructure.repository.JpaTransacao
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AutenticadorResolveDependency {
@@ -25,6 +27,11 @@ public class AutenticadorResolveDependency {
 
     @Autowired
     private JpaTransacaoRepository jpaTransacaoRepository;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public CartaoPresentation cartaoPresentation() {

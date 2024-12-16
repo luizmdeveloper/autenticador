@@ -1,0 +1,26 @@
+@startuml criar cartão 
+skinparam LegendBackgroundColor #white
+skinparam padding 4
+title UC002 consulta de saldo cartão
+legend top
+    Consultar saldo do cartão de benefício
+end legend
+
+actor autor
+participant "api-mini-autorizador" as apiMiniAutorizador
+database "databasevr" as database
+
+autonumber
+
+autor -> apiMiniAutorizador: **GET /v1/cartoes/:numeroCartao/saldo**\n**headers**\nAuthrorization Basic xxxx\nContent-Type: application/json}
+
+apiMiniAutorizador -> database: SELECT * FROM cartoes\nWHERE cartoes.numero = @numero
+database -> apiMiniAutorizador: Resultado da consulta
+
+alt Cartao inexistente
+    apiMiniAutorizador -> autor: response\n**status** 404 Not Found\n**body**\n{\n\t"status": 404,\n\t"tipo": "Entidade não encontrada",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z"\n}
+else Entrada inválida
+    apiMiniAutorizador -> autor: response\n**status** 200 OK\n**body**500
+end
+
+@enduml
