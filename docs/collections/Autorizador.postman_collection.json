@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "f26f64a1-fdc6-489b-a5b0-1c404362619b",
+		"name": "Autorizador",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2866152"
+	},
+	"item": [
+		{
+			"name": "Cartoes",
+			"item": [
+				{
+					"name": "POST /v1/cartoes",
+					"item": [
+						{
+							"name": "UC001 Criar novo cartão",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{senha}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{usuario}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"numeroCartao\": \"5364 8532 7186 2921\",\r\n    \"senha\": \"123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/cartoes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"cartoes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET /v1/cartoes/:numeroCartao/saldo",
+					"item": [
+						{
+							"name": "UC002 Obter saldo do cartão",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/v1/cartoes/:numeroCartao/saldo",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"v1",
+										"cartoes",
+										":numeroCartao",
+										"saldo"
+									],
+									"variable": [
+										{
+											"key": "numeroCartao",
+											"value": "5364 8532 7186 2923"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transacoes",
+			"item": [
+				{
+					"name": "POST /v1/transacoes",
+					"item": [
+						{
+							"name": "UC003 Adicionar uma transação",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{senha}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{usuario}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"numeroCartao\": \"5364 8532 7186 2923\",\r\n    \"senha\": \"123\",\r\n    \"valor\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/transacoes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"transacoes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
