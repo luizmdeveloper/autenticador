@@ -1,0 +1,35 @@
+@startuml criar cartão 
+skinparam LegendBackgroundColor #white
+skinparam padding 4
+title UC001 criação do catão
+legend top
+    Criação de cartao de benefício
+end legend
+
+actor autor
+participant "api-mini-autorizador" as apiMiniAutorizador
+database "databasevr" as database
+
+autonumber
+
+autor -> apiMiniAutorizador: **POST /v1/cartoes**\n**headers**\nAuthrorization Basic xxxx\nContent-Type: application/json\n**body**\n{\n\t"numeroCartao": "xxxx xxxx xxxx xxxx",\n\t"senha": "xxxx"\n}
+
+apiMiniAutorizador -> apiMiniAutorizador: Validar entrada e campos obrigatório
+
+alt Entrada valida
+    apiMiniAutorizador -> database: SELECT * FROM cartoes\nWHERE cartoes.numero = @numero
+    database -> apiMiniAutorizador: Resultado da consulta
+
+    alt Existe cartão com mesmo número
+        apiMiniAutorizador -> autor: response\n**status** 422 Unproceesable entity\n**body**\n{\n\t"status": 422,\n\t"tipo": "Erro de negócio",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z"\n}
+    else
+       apiMiniAutorizador -> database: INSERT INTO cartoes (numero, senha, saldo) VALUES ("xxxx xxxx xxxx xxxx", "xxxx", 500); 
+       database -> apiMiniAutorizador: resultado
+       apiMiniAutorizador -> autor: response\n**status** 201 Create\n**body**\n{\n\t"numeroCartao": "xxxx xxxx xxxx xxxx",\n\t"senha": "xxxx",\n}       
+    end
+
+else Entrada inválida
+    apiMiniAutorizador -> autor: response\n**status** 400 Bad request\n**body**\n{\n\t"status": 400,\n\t"tipo": "Dados inválido",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z",\n\t"propriedade": [\n\t\t{\n\t\t\t"mensagemUsuario": "examplo",\n\t\t\t"propriedade": "exemplo"\n\t\t}\n\t]\n}
+end
+
+@enduml

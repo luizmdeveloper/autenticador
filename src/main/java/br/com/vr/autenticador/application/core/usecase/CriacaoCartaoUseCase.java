@@ -5,6 +5,7 @@ import br.com.vr.autenticador.application.core.entidade.Cartao;
 import br.com.vr.autenticador.application.core.presetation.CartaoPresentation;
 import br.com.vr.autenticador.application.core.repository.CartaoRepository;
 import br.com.vr.autenticador.application.execption.NumeroCartaoJaCadastradoException;
+import br.com.vr.autenticador.application.infrastructure.security.encoder.Encoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
@@ -13,9 +14,9 @@ public class CriacaoCartaoUseCase {
 
     private final CartaoRepository repository;
     private final CartaoPresentation presentation;
-    private final PasswordEncoder encoder;
+    private final Encoder encoder;
 
-    public CriacaoCartaoUseCase(CartaoRepository repository, CartaoPresentation presentation, PasswordEncoder encoder) {
+    public CriacaoCartaoUseCase(CartaoRepository repository, CartaoPresentation presentation, Encoder encoder) {
         this.repository = repository;
         this.presentation = presentation;
         this.encoder = encoder;

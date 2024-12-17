@@ -7,6 +7,7 @@ import br.com.vr.autenticador.application.core.repository.CartaoRepository;
 import br.com.vr.autenticador.application.core.repository.TransacaoRepository;
 import br.com.vr.autenticador.application.execption.ErroGenericoException;
 import br.com.vr.autenticador.application.execption.RegraDeNegocioException;
+import br.com.vr.autenticador.application.infrastructure.security.encoder.Encoder;
 import br.com.vr.autenticador.helper.CartaoHelper;
 import br.com.vr.autenticador.helper.TransacaoHelper;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -36,27 +36,27 @@ public class CriacaoTransacaoUseCaseTest {
     private TransacaoPresentation presentation;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private Encoder encoder;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.criacaoTransacaoUseCase = new CriacaoTransacaoUseCase(repository, cartaoRepository, presentation, passwordEncoder);
+        this.criacaoTransacaoUseCase = new CriacaoTransacaoUseCase(repository, cartaoRepository, presentation, encoder);
     }
 
     @Test
     public void testCriaTransacaoComSucesso() {
         var transacaoRequest = TransacaoHelper.criarRequest();
-        transacaoRequest.setSenha("1234");
+        transacaoRequest.setSenha("3214");
         var cartao = new Cartao();
         cartao.setNumero("5364 8532 7186 2921");
-        cartao.setSenha("$2a$10$BIkzoGgSDCWMWZdxeFMOEutUXUJNOuFmLA7ETdh4mWMCB8.kb2bzm");
+        cartao.setSenha("1EF3F6149E99629350145BFF101BFCEF56A55432DCB23AFFCDC47FA77E91AB40");
         cartao.setSaldo(BigDecimal.valueOf(500));
         var saldoFinal = cartao.getSaldo().subtract(transacaoRequest.getValor());
 
         Mockito.when(cartaoRepository.findByNumero(Mockito.any())).thenReturn(Optional.of(cartao));
         Mockito.when(presentation.convertRequestToEntity(Mockito.any())).thenReturn(TransacaoHelper.criarTransacao());
-        Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn("$2a$10$BIkzoGgSDCWMWZdxeFMOEutUXUJNOuFmLA7ETdh4mWMCB8.kb2bzm");
+        Mockito.when(encoder.encode(Mockito.anyString())).thenReturn("1EF3F6149E99629350145BFF101BFCEF56A55432DCB23AFFCDC47FA77E91AB40");
 
         var response = criacaoTransacaoUseCase.criar(transacaoRequest);
 
@@ -113,7 +113,7 @@ public class CriacaoTransacaoUseCaseTest {
 
         Mockito.when(cartaoRepository.findByNumero(Mockito.any())).thenReturn(Optional.of(cartao));
         Mockito.when(presentation.convertRequestToEntity(Mockito.any())).thenReturn(TransacaoHelper.criarTransacao());
-        Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn("$2a$10$BIkzoGgSDCWMWZdxeFMOEutUXUJNOuFmLA7ETdh4mWMCB8.kb2bzm");
+        Mockito.when(encoder.encode(Mockito.anyString())).thenReturn("$2a$10$BIkzoGgSDCWMWZdxeFMOEutUXUJNOuFmLA7ETdh4mWMCB8.kb2bzm");
         Mockito.doThrow(new RuntimeException()).when(repository).save(Mockito.any(Transacao.class));
 
         Assertions.assertThrows(ErroGenericoException.class, () -> criacaoTransacaoUseCase.criar(transacaoRequest));

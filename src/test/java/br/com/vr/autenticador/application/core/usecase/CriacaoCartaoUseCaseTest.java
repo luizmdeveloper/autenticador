@@ -3,6 +3,7 @@ package br.com.vr.autenticador.application.core.usecase;
 import br.com.vr.autenticador.application.core.presetation.CartaoPresentation;
 import br.com.vr.autenticador.application.core.repository.CartaoRepository;
 import br.com.vr.autenticador.application.execption.NumeroCartaoJaCadastradoException;
+import br.com.vr.autenticador.application.infrastructure.security.encoder.Encoder;
 import br.com.vr.autenticador.helper.CartaoHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ public class CriacaoCartaoUseCaseTest {
     private CartaoPresentation presentation;
 
     @Mock
-    private PasswordEncoder encoder;
+    private Encoder encoder;
 
     @BeforeEach
     public void setUp() {

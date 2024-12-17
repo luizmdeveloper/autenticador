@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static br.com.vr.autenticador.helper.ConfigApiHelper.HEADER_AUTORIZATION;
+import static br.com.vr.autenticador.helper.ConfigApiHelper.HEADER_AUTORIZATION_VALUE;
 
 @WebMvcTest(TransacaoControllerTest.class)
 @ExtendWith(SpringExtension.class)
@@ -36,8 +38,6 @@ public class TransacaoControllerTest {
     private CriacaoTransacaoUseCase criacaoTransacaoUseCase;
 
     private static final String URL_BASE_TRANSACOES = "/v1/transacoes";
-    private static final String HEADER_AUTORIZATION = "authorization";
-    private static final String HEADER_AUTORIZATION_VALUE = "Basic bHVpei5jYXZhbGNhbnRlQHZyLmNvbS5icjpAZG1pbmlzdHJhZG9y";
 
     @BeforeEach
     public void setUp() {

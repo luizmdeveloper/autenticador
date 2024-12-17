@@ -17,6 +17,8 @@ import br.com.vr.autenticador.application.infrastructure.repository.JpaCartaoRep
 import br.com.vr.autenticador.application.infrastructure.repository.JpaTransacaoRepository;
 import br.com.vr.autenticador.application.infrastructure.repository.JpaUsuarioRepository;
 import br.com.vr.autenticador.application.infrastructure.security.UserDetailsServiceImpl;
+import br.com.vr.autenticador.application.infrastructure.security.encoder.Encoder;
+import br.com.vr.autenticador.application.infrastructure.security.encoder.ShaEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +41,11 @@ public class AutenticadorResolveDependency {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Encoder encoder() {
+        return new ShaEncoder();
     }
 
     @Bean
@@ -68,12 +75,12 @@ public class AutenticadorResolveDependency {
 
     @Bean
     public CriacaoCartaoUseCase criacaoCartaoUseCase() {
-        return new CriacaoCartaoUseCase(cartaoRepository(), cartaoPresentation(), passwordEncoder());
+        return new CriacaoCartaoUseCase(cartaoRepository(), cartaoPresentation(), encoder());
     }
 
     @Bean
     public CriacaoTransacaoUseCase criacaoTransacaoUseCase() {
-        return new CriacaoTransacaoUseCase(transacaoRepository(), cartaoRepository(), transacaoPresentation(), passwordEncoder());
+        return new CriacaoTransacaoUseCase(transacaoRepository(), cartaoRepository(), transacaoPresentation(), encoder());
     }
 
     @Bean

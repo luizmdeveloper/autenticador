@@ -1,0 +1,44 @@
+@startuml criar cartão 
+skinparam LegendBackgroundColor #white
+skinparam padding 4
+title UC003 criar uma transação
+legend top
+    Criar uma transação e atualizando saldo
+end legend
+
+actor autor
+participant "api-mini-autorizador" as apiMiniAutorizador
+database "databasevr" as database
+
+autonumber
+
+autor -> apiMiniAutorizador: **POST /v1/transacoes**\n**headers**\nAuthrorization Basic xxxx\nContent-Type: application/json\n**body**\n{\n\t"numeroCartao": "xxxx xxxx xxxx xxxx",\n\t"senha": "xxxx",\n"valor": 100}
+
+apiMiniAutorizador -> apiMiniAutorizador: Validar entrada e campos obrigatório
+
+alt Entrada valida
+    apiMiniAutorizador -> database: SELECT * FROM cartoes\nWHERE cartoes.numero = @numero
+    database -> apiMiniAutorizador: Resultado da consulta
+
+    alt Existe cartão com mesmo número
+        apiMiniAutorizador -> autor: response\n**status** 422 Unproceesable entity\n**body**\n{\n\t"status": 422,\n\t"tipo": "Erro de negócio",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z"\n}
+    else
+        alt Senha informada diferente dá cadastrada
+            apiMiniAutorizador -> autor: response\n**status** 422 Unproceesable entity\n**body**\n{\n\t"status": 422,\n\t"tipo": "Erro de negócio",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z"\n}
+        else
+            alt Saldo insuficiente
+                apiMiniAutorizador -> autor: response\n**status** 422 Unproceesable entity\n**body**\n{\n\t"status": 422,\n\t"tipo": "Erro de negócio",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z"\n}
+            else
+                apiMiniAutorizador -> apiMiniAutorizador: Saldo do cartão - valor dá transação\n criar um novo saldo
+                apiMiniAutorizador -> database: UPDATE cartoes SET\n\tsaldo = @saldo\nWHERE id = @id
+                database -> apiMiniAutorizador: resultado update
+                apiMiniAutorizador -> database: INSERT INTO transacoes (cartao_id, date, tipo, valor) VALUES (1, '2024-12-16 11:01:00', 1, 100);
+                apiMiniAutorizador -> autor: response\n**status** 201 Created\n**body**\n{\n\t"status": "ok"\n}
+            end
+        end
+    end
+else Entrada inválida
+    apiMiniAutorizador -> autor: response\n**status** 400 Bad request\n**body**\n{\n\t"status": 400,\n\t"tipo": "Dados inválido",\n\t"titulo": "error"\n\t"detalhe": "mensagem detalhe"\n\t"dataHora":"2024-12-16 10:17:00.000Z",\n\t"propriedade": [\n\t\t{\n\t\t\t"mensagemUsuario": "examplo",\n\t\t\t"propriedade": "exemplo"\n\t\t}\n\t]\n}
+end
+
+@enduml
