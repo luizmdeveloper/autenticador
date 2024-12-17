@@ -30,7 +30,8 @@
 		<java.version>17</java.version>
 		<mysql-connector-j.version>9.1.0</mysql-connector-j.version>
 		<flyway-mysql.version>11.1.0</flyway-mysql.version>
-		<modelmapper.version>3.0.0</modelmapper.version>
+		<junit.version>4.12</junit.version>
+		<mockito-core.version>3.4.6</mockito-core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -79,6 +80,18 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

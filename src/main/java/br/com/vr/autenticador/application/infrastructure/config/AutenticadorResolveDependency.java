@@ -68,12 +68,12 @@ public class AutenticadorResolveDependency {
 
     @Bean
     public CriacaoCartaoUseCase criacaoCartaoUseCase() {
-        return new CriacaoCartaoUseCase(cartaoRepository(), cartaoPresentation());
+        return new CriacaoCartaoUseCase(cartaoRepository(), cartaoPresentation(), passwordEncoder());
     }
 
     @Bean
     public CriacaoTransacaoUseCase criacaoTransacaoUseCase() {
-        return new CriacaoTransacaoUseCase(transacaoRepository(), cartaoRepository(), transacaoPresentation());
+        return new CriacaoTransacaoUseCase(transacaoRepository(), cartaoRepository(), transacaoPresentation(), passwordEncoder());
     }
 
     @Bean

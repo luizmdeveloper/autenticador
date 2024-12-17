@@ -13,7 +13,6 @@ public class TransacaoPresentationImpl implements TransacaoPresentation {
         var transacao = new Transacao();
         transacao.setValor(request.getValor());
         transacao.setDate(OffsetDateTime.now());
-        transacao.setValor(request.getValor());
         return transacao;
     }
 
