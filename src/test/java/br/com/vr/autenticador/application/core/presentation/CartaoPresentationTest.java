@@ -36,6 +36,11 @@ public class CartaoPresentationTest {
     }
 
     @Test
+    public void testConvertRequestNullToEntityComSucesso() {
+        Assertions.assertNull(cartaoPresentation.convertRequestToEntity(null));
+    }
+
+    @Test
     public void testConvertEntityToResponseComSucesso() {
         var cartao = CartaoHelper.criarCartao();
 
@@ -44,5 +49,10 @@ public class CartaoPresentationTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(cartao.getNumero(), response.getNumeroCartao());
         Assertions.assertEquals(cartao.getSenha(), response.getSenha());
+    }
+
+    @Test
+    public void testConvertEntityNullToResponseComSucesso() {
+        Assertions.assertNull(cartaoPresentation.convertEntityToResponse(null));
     }
 }

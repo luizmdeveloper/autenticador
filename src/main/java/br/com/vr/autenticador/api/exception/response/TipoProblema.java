@@ -17,12 +17,4 @@ public enum TipoProblema {
         this.path = "https://vr.com.br" + path;
         this.titulo = titulo;
     }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getPath() {
-        return path;
-    }
 }

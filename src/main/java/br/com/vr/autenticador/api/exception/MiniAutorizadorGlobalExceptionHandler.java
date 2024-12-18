@@ -4,7 +4,6 @@ import br.com.vr.autenticador.api.exception.response.ProblemaDetalheResponse;
 import br.com.vr.autenticador.api.exception.response.PropriedadeResponse;
 import br.com.vr.autenticador.api.exception.response.TipoProblema;
 import br.com.vr.autenticador.application.execption.EntidadeNaoEncontradoException;
-import br.com.vr.autenticador.application.execption.ErroGenericoException;
 import br.com.vr.autenticador.application.execption.NumeroCartaoJaCadastradoException;
 import br.com.vr.autenticador.application.execption.RegraDeNegocioException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +67,6 @@ public class MiniAutorizadorGlobalExceptionHandler extends ResponseEntityExcepti
 
     @ExceptionHandler({RegraDeNegocioException.class})
     public ResponseEntity<Object> handleRegraDeNegocioException(RegraDeNegocioException ex, WebRequest request){
-        HttpStatusCode status = HttpStatusCode.valueOf(422);
-        var problema = criarProblema(TipoProblema.ERRO_NEGOCIO, status, ex.getMessage());
-        problema.setMensagemUsuario(ex.getMessage());
-        return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
-    }
-
-    @ExceptionHandler({ErroGenericoException.class})
-    public ResponseEntity<Object> handleErroGenericoException(ErroGenericoException ex, WebRequest request){
         HttpStatusCode status = HttpStatusCode.valueOf(422);
         var problema = criarProblema(TipoProblema.ERRO_NEGOCIO, status, ex.getMessage());
         problema.setMensagemUsuario(ex.getMessage());

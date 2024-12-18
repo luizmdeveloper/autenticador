@@ -5,35 +5,32 @@ import br.com.vr.autenticador.api.request.CartaoRequest;
 import br.com.vr.autenticador.application.core.presetation.CartaoPresentation;
 import br.com.vr.autenticador.application.core.usecase.ConsultaSaldoCartaoUseCase;
 import br.com.vr.autenticador.application.core.usecase.CriacaoCartaoUseCase;
+import br.com.vr.autenticador.application.execption.EntidadeNaoEncontradoException;
+import br.com.vr.autenticador.application.execption.NumeroCartaoJaCadastradoException;
 import br.com.vr.autenticador.helper.CartaoHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
-import static br.com.vr.autenticador.helper.ConfigApiHelper.HEADER_AUTORIZATION;
 import static br.com.vr.autenticador.helper.ConfigApiHelper.HEADER_AUTORIZATION_VALUE;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CartoesController.class)
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureDataJpa
 public class CartaoControllerTest {
 
     @Autowired
@@ -42,13 +39,13 @@ public class CartaoControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockitoBean
+    @MockBean
     private CriacaoCartaoUseCase criacaoCartaoUseCase;
 
-    @MockitoBean
+    @MockBean
     private CartaoPresentation cartaoPresentation;
 
-    @MockitoBean
+    @MockBean
     private ConsultaSaldoCartaoUseCase consultaSaldoCartaoUseCase;
 
     private static final String URL_BASE_CARTOES = "/v1/cartoes";
@@ -67,7 +64,7 @@ public class CartaoControllerTest {
         mockMvc.perform(
                 post(URL_BASE_CARTOES)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER_AUTORIZATION, HEADER_AUTORIZATION_VALUE)
+                        .header(AUTHORIZATION, HEADER_AUTORIZATION_VALUE)
                         .content(objectMapper.writeValueAsString(CartaoHelper.criarRequest()))
         ).andExpect(status().isCreated());
     }
@@ -79,8 +76,8 @@ public class CartaoControllerTest {
         mockMvc.perform(
                 post(URL_BASE_CARTOES)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER_AUTORIZATION, HEADER_AUTORIZATION_VALUE)
                         .content(objectMapper.writeValueAsString(cartaoRequest))
+                        .header(AUTHORIZATION, HEADER_AUTORIZATION_VALUE)
         ).andExpect(status().isBadRequest());
     }
 
@@ -91,7 +88,30 @@ public class CartaoControllerTest {
         mockMvc.perform(
                 get(URL_BASE_CARTOES_CONSULTA_SALDO)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER_AUTORIZATION, HEADER_AUTORIZATION_VALUE)
+                        .header(AUTHORIZATION, HEADER_AUTORIZATION_VALUE)
         ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCriaCartaoQuandoNumerCartaoJaCadastrado() throws Exception {
+        given(criacaoCartaoUseCase.save(Mockito.any())).willThrow(NumeroCartaoJaCadastradoException.class);
+
+        mockMvc.perform(
+                post(URL_BASE_CARTOES)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, HEADER_AUTORIZATION_VALUE)
+                        .content(objectMapper.writeValueAsString(CartaoHelper.criarRequest()))
+        ).andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testConsultaSaldoCartaoQuandoCartaoNaoEncontrado() throws Exception {
+        given(consultaSaldoCartaoUseCase.consultar(Mockito.any())).willThrow(EntidadeNaoEncontradoException.class);
+
+        mockMvc.perform(
+                get(URL_BASE_CARTOES_CONSULTA_SALDO)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, HEADER_AUTORIZATION_VALUE)
+        ).andExpect(status().isNotFound());
     }
 }

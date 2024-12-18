@@ -18,7 +18,7 @@ public class TransacoesController implements TransacoesSwagger {
 
     @Override
     public TransacaoResponse criar(TransacaoRequest request) {
-        var transacao = criacaoTransacaoUseCase.criar(request);
+        criacaoTransacaoUseCase.criar(request);
         var response = new TransacaoResponse();
         response.setStatus("OK");
         return response;
